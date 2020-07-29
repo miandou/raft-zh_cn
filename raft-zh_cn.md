@@ -156,6 +156,9 @@ Raft 通过选举一个高贵的领导人，然后给予他全部的管理复制
 3. 如果已经存在的日志条目和新的产生冲突（索引值相同但是任期号不同），删除这一条和之后所有的 （5.3 节）
 4. 附加日志中尚未存在的任何新条目
 5. 如果 `leaderCommit > commitIndex`，令 commitIndex 等于 leaderCommit 和 新日志条目索引值中较小的一个
+// a = leaderCommit 和 新日志条目索引值中较小的一个
+// 如果a > commitIndex, commitIndex = a
+// 因为如果是在试探旧日志是否一致时，可能会造成commitIndex回退的可能?
 
 **请求投票 RPC**：
 
@@ -177,6 +180,7 @@ Raft 通过选举一个高贵的领导人，然后给予他全部的管理复制
 
 1. 如果`term < currentTerm`返回 false （5.2 节）
 2. 如果 votedFor 为空或者为 candidateId，并且候选人的日志至少和自己一样新，那么就投票给他（5.2 节，5.4 节）
+
 
 **所有服务器需遵守的规则**：
 
